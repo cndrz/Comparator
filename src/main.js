@@ -188,7 +188,7 @@ $("run").addEventListener("click", async () => {
   lastModels.B = modelB;
 
   if (!GROQ_API_KEY) {
-    setStatus("Set GROQ_API_KEY in src/config.js first.", true);
+    setStatus("Set VITE_GROQ_API_KEY in .env first.", true);
     return;
   }
   if (!pa || !pb) {

@@ -56,7 +56,7 @@ public/
   apple-touch-icon.png  180×180 icon for iOS home screens
 src/
   main.js               Draft, run state, run, verdict, copy, dialog wiring
-  config.js             Groq API key constant
+  config.js             Groq key from VITE_GROQ_API_KEY
   lib/
     groq.js             Groq chat-completions client
     judge.js            Judge prompt, order swap, verdict parsing
@@ -91,5 +91,5 @@ work.
 - Groq's free tier caps each model at about 8,000 tokens per minute. A 429 is
   retried once automatically when the wait is 10 seconds or less; otherwise the
   output card shows how long to wait before running again.
-- The API key is a constant in `src/config.js` and is bundled into the build
-  output.
+- The API key comes from `VITE_GROQ_API_KEY` in `.env` (gitignored; copy
+  `.env.example`) and is inlined into the build output.
