@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparator</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#eef1f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10161c" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Comparator<span class="vs" aria-hidden="true"><span class="dot a"></span><span class="dot b"></span><span class="dot v"></span></span></h1>
+    <nav class="header-actions" aria-label="Help">
+      <button type="button" class="ghost help-fab" data-open="helpDialog" aria-label="Help" title="Help">?</button>
+    </nav>
+  </header>
+
+  <p class="lede">Two prompts enter. One wins.</p>
+
+  <div class="editors">
+    <div class="col a">
+      <h2>Prompt A</h2>
+      <fieldset class="option-group">
+        <legend class="sr-only">Model for Prompt A</legend>
+        <div class="options" id="modelA"></div>
+      </fieldset>
+      <fieldset class="option-group">
+        <legend class="sr-only">Creativity for Prompt A</legend>
+        <div class="options" id="tempA"></div>
+      </fieldset>
+      <label class="sr-only" for="pa">Prompt A</label>
+      <textarea id="pa" spellcheck="false"></textarea>
+      <div class="out a" id="outA">
+        <div class="out-head"><strong>Output A<span id="badgeA"></span></strong><button class="small" type="button" data-view="A" hidden>View output</button></div>
+        <div class="out-body" id="bodyA"></div>
+      </div>
+    </div>
+    <div class="col b">
+      <h2>Prompt B</h2>
+      <fieldset class="option-group">
+        <legend class="sr-only">Model for Prompt B</legend>
+        <div class="options" id="modelB"></div>
+      </fieldset>
+      <fieldset class="option-group">
+        <legend class="sr-only">Creativity for Prompt B</legend>
+        <div class="options" id="tempB"></div>
+      </fieldset>
+      <label class="sr-only" for="pb">Prompt B</label>
+      <textarea id="pb" spellcheck="false"></textarea>
+      <div class="out b" id="outB">
+        <div class="out-head"><strong>Output B<span id="badgeB"></span></strong><button class="small" type="button" data-view="B" hidden>View output</button></div>
+        <div class="out-body" id="bodyB"></div>
+      </div>
+    </div>
+    <div class="col verdict" id="verdict">
+      <h2>Verdict</h2>
+      <fieldset class="option-group">
+        <legend class="sr-only">Judge model</legend>
+        <div class="options" id="judgeModels"></div>
+      </fieldset>
+      <fieldset class="option-group">
+        <legend class="sr-only">Judge creativity</legend>
+        <div class="options" id="judgeTemps"></div>
+      </fieldset>
+      <div class="verdict-body">
+        <p class="hint" id="verdictEmpty">Run a comparison to see the verdict.</p>
+        <div class="verdict-result">
+          <h3 id="vTitle"></h3>
+          <p id="vReason"></p>
+          <p class="verdict-meta" id="vMeta"></p>
+          <button class="small" id="copyWin" style="display:none">Copy winning answer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="composer">
+    <label class="sr-only" for="userInput">Message both prompts</label>
+    <textarea id="userInput" rows="1" spellcheck="false"></textarea>
+    <button class="send" id="run" type="button" disabled aria-label="Run comparison" title="Run comparison">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+  </div>
+  <p class="hint" id="composerHint">Both prompts receive this same message.</p>
+  <p class="status" id="status" role="status"></p>
+  <p class="hint" id="runHint">Fill in both prompts and the shared input to run.</p>
+
+</div>
+
+<dialog class="dialog" id="helpDialog" aria-labelledby="helpTitle">
+  <div class="dialog-head">
+    <h2 id="helpTitle">Help</h2>
+    <button type="button" class="dialog-close" data-close aria-label="Close help">×</button>
+  </div>
+
+  <section class="help-section">
+    <h3>Scope and limits</h3>
+    <ul class="limits">
+      <li><strong>Groq only, free tier.</strong> GPT-OSS 120B/20B and Qwen3.8 27B, about 8,000 tokens/min and 1,000 requests/day. No GPT-4, Claude, or Gemini.</li>
+      <li><strong>Small, single-turn answers.</strong> 800-token cap, no history, follow-ups, tools, files, or images.</li>
+      <li><strong>The judge is an opinion.</strong> Another small model, not a benchmark. It can be wrong, biased, or a one-run sample.</li>
+      <li><strong>Nothing is stored.</strong> Drafts sit in session storage, runs go to Groq, and the key ships in the page bundle.</li>
+    </ul>
+  </section>
+
+  <section class="help-section">
+    <h3>How to use</h3>
+    <ol class="steps">
+      <li>Pick a model and creativity per prompt.</li>
+      <li>Write both prompts and the shared message.</li>
+      <li>Press ↑ or Enter to run both.</li>
+      <li>View an output, or copy the winner.</li>
+    </ol>
+  </section>
+
+  <section class="help-section">
+    <h3>FAQ</h3>
+    <div class="faq">
+      <details>
+        <summary>Why shuffle the order?</summary>
+        <p>Judges favour the first answer they read, so the order is swapped each run and the verdict mapped back.</p>
+      </details>
+      <details>
+        <summary>Can A and B use different models?</summary>
+        <p>Yes. Each prompt has its own model and creativity, so you can compare prompts, models, or both.</p>
+      </details>
+    </div>
+  </section>
+</dialog>
+
+<dialog class="dialog" id="outputDialog" aria-labelledby="outputTitle">
+  <div class="dialog-head">
+    <div>
+      <h2 id="outputTitle">Output</h2>
+      <p class="view-meta" id="viewMeta"></p>
+    </div>
+    <div class="dialog-tools">
+      <button type="button" class="small" data-copy="viewBody">Copy</button>
+      <button type="button" class="dialog-close" data-close aria-label="Close output">×</button>
+    </div>
+  </div>
+
+  <div class="view-pane" id="viewPane">
+    <div class="view-body" id="viewBody"></div>
+  </div>
+</dialog>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

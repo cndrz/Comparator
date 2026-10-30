@@ -1,0 +1,138 @@
+.wrap { width: 100%; max-width: 1240px; margin: auto; padding: 2rem 1.25rem; }
+
+header { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: .5rem; }
+h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); line-height: 1; margin: 0; font-weight: 700; letter-spacing: -0.03em; }
+h1 .vs { display: inline-flex; gap: .35rem; vertical-align: middle; margin-left: .6rem; }
+h1 .dot { width: .55em; height: .55em; border-radius: 50%; display: inline-block; }
+h1 .dot.a { background: var(--a); }
+h1 .dot.b { background: var(--b); }
+h1 .dot.v { background: var(--muted); }
+
+.header-actions { position: absolute; top: 1rem; right: 1rem; z-index: 10; display: flex; gap: .5rem; }
+button.ghost { padding: .5rem .95rem; font-size: .88rem; border-radius: 99px; background: var(--surface); }
+button.ghost:hover { border-color: var(--a); color: var(--a); }
+button.help-fab {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 1rem;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .14);
+}
+
+.lede { margin: 0 auto 1.5rem; color: var(--muted); max-width: 60ch; text-align: center; }
+
+/* ---------- Dialogs ---------- */
+.dialog {
+  width: min(760px, calc(100vw - 2rem));
+  max-height: min(85vh, 860px);
+  margin: auto;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .28);
+  overflow: auto;
+}
+.dialog::backdrop {
+  background: rgba(9, 14, 20, .45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.dialog[open] { animation: dialog-in .16s ease-out; }
+.dialog[open]::backdrop { animation: backdrop-in .16s ease-out; }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+@keyframes backdrop-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open], .dialog[open]::backdrop { animation: none; }
+}
+body:has(dialog[open]) { overflow: hidden; }
+
+.dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .7rem; }
+.dialog-head h2 { margin: 0; font-size: 1.5rem; letter-spacing: -0.01em; }
+.dialog-close { font-size: 1.4rem; line-height: 1; padding: .15rem .5rem; border: 0; background: none; color: var(--muted); border-radius: 6px; }
+.dialog-close:hover { color: var(--ink); background: var(--bg); }
+
+.help-section + .help-section { margin-top: .9rem; }
+.help-section h3 { margin: 0 0 .45rem; font-size: 1rem; }
+
+.editors { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+.col { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: .7rem; }
+.col.a { border-color: var(--a); }
+.col.b { border-color: var(--b); }
+.col h2 { margin: 0; font-size: 1.05rem; }
+.col.a h2 { color: var(--a); }
+.col.b h2 { color: var(--b); }
+
+/* ---------- How to use ---------- */
+.steps {
+  list-style: none;
+  counter-reset: step;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .4rem;
+}
+.steps li {
+  counter-increment: step;
+  position: relative;
+  margin: 0;
+  padding: .4rem .55rem .4rem 2.4rem;
+  font-size: .88rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: .6rem;
+  top: .5rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--a-tint);
+  color: var(--a);
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+/* ---------- Scope and limits ---------- */
+.limits { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: .4rem .9rem; }
+.limits li { padding-left: .55rem; border-left: 2px solid var(--line); font-size: .84rem; line-height: 1.4; color: var(--muted); }
+.limits li strong { color: var(--ink); }
+@media (min-width: 560px) {
+  .steps { grid-template-columns: 1fr 1fr; }
+  .limits { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 900px) {
+  .editors { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  header { padding-top: 2.75rem; }
+  .dialog { max-height: calc(100dvh - 1.5rem); padding: 1rem; }
+  .steps li, .limits li, .faq summary, .faq p { font-size: .8rem; }
+  .steps li { padding: .3rem .5rem .3rem 2.2rem; }
+  .steps li::before { left: .5rem; top: .3rem; width: 1.2rem; height: 1.2rem; font-size: .7rem; }
+  .limits { gap: .3rem; }
+  .faq details { padding: .4rem .6rem; }
+  .help-section + .help-section { margin-top: .65rem; }
+}
+@media (max-width: 380px) {
+  .dialog { max-height: 100dvh; padding: .85rem; }
+  .steps li, .limits li, .faq summary, .faq p { font-size: .76rem; }
+  .steps li { padding: .28rem .45rem .28rem 2.1rem; }
+  .steps li::before { left: .45rem; top: .28rem; }
+  .help-section h3 { font-size: .95rem; margin-bottom: .3rem; }
+  .help-section + .help-section { margin-top: .5rem; }
+  .limits { gap: .3rem; }
+  .faq details { padding: .35rem .55rem; }
+}
